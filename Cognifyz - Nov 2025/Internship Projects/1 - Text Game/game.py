@@ -55,7 +55,7 @@ def penalty_shootout():
     print()
     player_score = 0
     computer_score = 0
-    rounds = 5
+    rounds = 3
     for i in range(rounds):
         print(f"Round {i+1}:")
         print("\nChoose your direction to shoot (left, center, right): ")
