@@ -1,0 +1,82 @@
+############################################################
+# John the Ripper (JtR) ZIP Cracking Workflow - commands.txt
+#
+# Purpose: Documentation for the Cybersecurity Internship Project
+#
+############################################################
+
+## 1. SETUP: TARGET CREATION
+
+# COMMAND: Creates a simple text file with test data.
+# PURPOSE: Simulates the sensitive data to be protected.
+echo "Sensitive data for internship project." > confidential.txt
+
+# COMMAND: Compresses 'confidential.txt' into an encrypted ZIP archive.
+# NOTE: The user is prompted to set the password (e.g., "weakpass").
+# PURPOSE: Creates the target for the cracking experiment.
+zip -e secret.zip confidential.txt
+
+# COMMAND: Removes the original, unencrypted file for cleanup.
+# PURPOSE: Best practice to ensure only the encrypted file remains.
+rm confidential.txt
+
+---
+
+## 2. HASH EXTRACTION
+
+# COMMAND: Executes the 'zip2john' utility (part of the JtR suite).
+# PURPOSE: Extracts the password hash (encrypted metadata) from 'secret.zip'
+#          and saves it to a new file, 'zip_hash.txt', in a format JtR can read.
+zip2john secret.zip > zip_hash.txt
+
+---
+
+## 3. CRACKING MODES
+
+### A. Basic/Default Cracking
+# COMMAND: Runs JtR using its default modes (internal dictionary, standard rules).
+# PURPOSE: Often the fastest way to crack very common or dictionary-based passwords.
+john zip_hash.txt
+
+### B. Dictionary Attack (Wordlist)
+# COMMAND: Runs JtR using a specific external wordlist file.
+# NOTE: Replace '/path/to/wordlist.txt' with the actual path (e.g., /usr/share/wordlists/rockyou.txt).
+# PURPOSE: Tests a large list of known compromised or common passwords.
+john --wordlist=/path/to/wordlist.txt zip_hash.txt
+
+### C. Incremental/Brute-Force Attack
+# COMMAND: Runs a brute-force attack, trying every character combination.
+# NOTE: Incremental='All' is the most comprehensive but slowest mode.
+# PURPOSE: Guarantees success given enough time, proving that password complexity is critical.
+john --incremental=All zip_hash.txt
+
+---
+
+## 4. SESSION MANAGEMENT AND OUTPUT
+
+# COMMAND: Checks the status of a currently running cracking session.
+# PURPOSE: Displays progress metrics like words per second and time elapsed/remaining.
+john --status zip_hash.txt
+
+# COMMAND: Resumes a session that was previously paused (using Ctrl+C).
+# PURPOSE: Allows the user to stop and start long cracking jobs without losing progress.
+john --restore zip_hash.txt
+
+# COMMAND: Displays all passwords that John the Ripper has successfully recovered
+#          from the hash file and stored in its 'john.pot' file.
+# PURPOSE: The final command to confirm and retrieve the cracked password.
+john --show zip_hash.txt
+
+---
+
+## 5. CLEANUP
+
+# COMMAND: Removes the generated hash file.
+rm zip_hash.txt
+
+# COMMAND: Removes the encrypted ZIP file.
+rm secret.zip
+
+# COMMAND: (Optional) Removes John's internal log and pot files for a full reset.
+# rm ~/.john/john.pot
+# rm ~/.john/john.rec

@@ -1,0 +1,22 @@
+# 1. Identify network information
+ip route
+
+# 2. Ping scan (Host Discovery)
+# Scans the entire network to identify live hosts
+sudo nmap -sn <host-ip>
+
+# 3. Port scan on target machine
+# Scans the most common ports to identify open services
+sudo nmap -p 1-1000 <host-ip>
+
+# 4. Service and Version Detection
+# Identifies running services and their versions
+sudo nmap -sV <host-ip>
+
+# 5. Operating System Detection
+# Attempts to guess the target OS based on fingerprinting
+sudo nmap -O <host-ip>
+
+# 6. Aggressive Scan
+# Performs OS detection, version detection, script scanning, and traceroute
+sudo nmap -A <host-ip>
